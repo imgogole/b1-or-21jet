@@ -1,23 +1,31 @@
-from flask import Flask
+from flask import Flask, jsonify
 from markupsafe import escape
-from enum import Flag
-
-class Theorems(Flag) :
-    THEOREM_1 = 1
-    THEOREM_2 = 2
-    THEOREM_3 = 4
-    THEOREM_4 = 8
-    THEOREM_5 = 16
-    def get_values(flags) :
-        return [t.name for t in Theorems if t.value & flags]
+from searcher import *
+import json
+import threading
+import logging
 
 app = Flask(__name__)
 
+logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
+
 @app.route("/")
 def on_home_page() :
-    return "Hello, World !", 200
+    return escape("Hello, World !"), 200
 
-@app.route("/api/<int:algortihm>/<int:theorems>")
+@app.route("/api/<int:algorithm>/<int:theorems>", methods=["GET"])
 def on_request(algorithm :int, theorems: int) :
-    pass
+    must_update = Searcher.CheckForUpdate(algorithm, theorems)
+    if must_update :
+        Searcher.Update(algorithm, theorems)
+        logging.info(f"Request algo : {Algorithm.Name(algorithm)}, theorems : {Theorem.Names(theorems)}. Cache must be updated")
+    else :
+        logging.info(f"Request algo : {Algorithm.Name(algorithm)}, theorems : {Theorem.Names(theorems)}. Cache up to date")
+
+    result : Result = Searcher.GetResult(algorithm, theorems)
+
+    if result is None :
+        return Result.NoResult()
+
+    return result.Success()
 
