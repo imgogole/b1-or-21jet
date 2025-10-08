@@ -21,6 +21,8 @@ class Algorithms :
         theorems = Theorem.Names(theos)
         if (algo == 0) :
             return Algorithms.SevenMinutesRule()
+        elif (algo == 1) :
+            return Algorithms.SeekingHeadRule()
 
     @staticmethod
     def SevenMinutesRule() :
@@ -32,6 +34,13 @@ class Algorithms :
    
         print("Règle des 7 minutes : Prochain B1 :", next_b1_hms + ". Prochain 21Jet :", next_21jet_hms)
 
+        if next_b1_hms is None and next_21jet_hms is not None :
+            return 0, 1
+        if next_b1_hms is not None and next_21jet_hms is None :
+            return 1, 0
+        if next_b1_hms is None and next_21jet_hms is None :
+            return 0, 0
+
         next_b1_hms = ToDateTime(next_b1_hms)
         next_21jet_hms = ToDateTime(next_21jet_hms)
 
@@ -40,4 +49,8 @@ class Algorithms :
         if delta <= 7 * 60 :
             return 0, 1
         return 1, 0
+    
+    @staticmethod
+    def SeekingHeadRule() :
+        pass
     
