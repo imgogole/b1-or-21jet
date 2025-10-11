@@ -9,6 +9,9 @@ LINE_B1                 = "RTM:LNE:139"
 DIR_RPDP_TO_LUMINY_21JET= "1"
 DIR_RPDP_TO_LUMINY_B1   = "1"
 
+HOUR_LAST_21JET         = time(18, 25, 0) # We consider the 21Jet bus' last departure at 18:25 maximum
+SECONDS_ONE_DAY         = 60 * 60 * 24
+
 class DatasAPI :
     @staticmethod
     def WakeUpDay():
@@ -18,17 +21,17 @@ class DatasAPI :
         return timestamp_5h
     def RealtimeLinePointUrl(line, point, direction) :
         return API_URL + f"getReelTime?lineRef={line}&direction={direction}&pointRef={point}"
-    def TheoricLinePointUrl(line, point, direction, date) :
-        return API_URL + f"getReelTime?lineRef={line}&direction={direction}&pointRef={point}&date={date}"
+    def TheoricLinePointUrl(line, point, direction, date_func) :
+        wake_up_date = date_func()
+        return API_URL + f"getReelTime?lineRef={line}&direction={direction}&pointRef={point}&date={wake_up_date}"
 
 
 class Data :
-    def __init__(self, url, time_update = 60, daily = False) :
+    def __init__(self, url, time_update = 60, list_time_init = 0) :
         self.url = url
         self.time_update = time_update
-        self.last_time = 0
+        self.last_time = list_time_init
         self.data = {}
-        self.daily = daily
     def Get(self, path: str = "", force_update: bool = False) :
         now = tme.time()
         if force_update or (now - self.last_time > self.time_update) :
@@ -55,6 +58,6 @@ class Data :
         if (req.status_code == 200) :
             data = req.json()
             self.data = data["data"]
-        self.last_time = DatasAPI.WakeUpDay() if self.daily else tme.time()
+        self.last_time = tme.time()
     def Url(self) :
         return self.url

@@ -4,6 +4,9 @@ from datas import *
 REALTIME_B1    = Data(DatasAPI.RealtimeLinePointUrl(LINE_B1, PNT_ROND_POINT_DU_PRADO, DIR_RPDP_TO_LUMINY_B1))
 REALTIME_21JET = Data(DatasAPI.RealtimeLinePointUrl(LINE_21JET, PNT_ROND_POINT_DU_PRADO, DIR_RPDP_TO_LUMINY_21JET))
 
+THEORIC_B1     = Data(DatasAPI.TheoricLinePointUrl(LINE_B1, PNT_ROND_POINT_DU_PRADO, DIR_RPDP_TO_LUMINY_B1, DatasAPI.WakeUpDay), SECONDS_ONE_DAY, DatasAPI.WakeUpDay())
+THEORIC_21JET  = Data(DatasAPI.TheoricLinePointUrl(LINE_21JET, PNT_ROND_POINT_DU_PRADO, DIR_RPDP_TO_LUMINY_21JET, DatasAPI.WakeUpDay), SECONDS_ONE_DAY, DatasAPI.WakeUpDay())
+
 def ToDateTime(hms: str) -> datetime :
     fmt = "%H:%M:%S"
     dt = datetime.strptime(hms, fmt)
@@ -17,6 +20,10 @@ class Algorithms :
         Starts the algorithm and return the probability.
         Result is (Probability of taking B1, Probability of taking 21Jet)
         """
+
+        # Ignores if the last 21Jet passed
+        if datetime.now().time() < HOUR_LAST_21JET :
+           return 1, 0
 
         theorems = Theorem.Names(theos)
         if (algo == 0) :
@@ -32,7 +39,7 @@ class Algorithms :
         next_b1_hms = REALTIME_B1.Get("temps_reel/0/DepartureTime/Hour")
         next_21jet_hms = REALTIME_21JET.Get("temps_reel/0/DepartureTime/Hour")
    
-        print("Règle des 7 minutes : Prochain B1 :", next_b1_hms + ". Prochain 21Jet :", next_21jet_hms)
+        print("[SEVEN_MINUTES_RULE] Prochain B1 :", next_b1_hms + ". Prochain 21Jet :", next_21jet_hms)
 
         if next_b1_hms is None and next_21jet_hms is not None :
             return 0, 1
@@ -52,5 +59,7 @@ class Algorithms :
     
     @staticmethod
     def SeekingHeadRule() :
-        pass
+        THEORIC_B1.Update()
+        THEORIC_21JET.Update()
+
     
