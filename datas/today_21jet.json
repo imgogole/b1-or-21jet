@@ -1,0 +1,219 @@
+{
+    "data": [
+        {
+            "DepartureTime": "07:15:44+01:00",
+            "ArrivalTime": "07:15:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "07:25:52+01:00",
+            "ArrivalTime": "07:25:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "07:35:52+01:00",
+            "ArrivalTime": "07:35:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "07:45:52+01:00",
+            "ArrivalTime": "07:45:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "07:55:52+01:00",
+            "ArrivalTime": "07:55:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "08:05:52+01:00",
+            "ArrivalTime": "08:05:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "08:15:52+01:00",
+            "ArrivalTime": "08:15:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "08:25:52+01:00",
+            "ArrivalTime": "08:25:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "08:35:52+01:00",
+            "ArrivalTime": "08:35:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "08:45:52+01:00",
+            "ArrivalTime": "08:45:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "08:55:52+01:00",
+            "ArrivalTime": "08:55:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "09:05:44+01:00",
+            "ArrivalTime": "09:05:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "09:15:44+01:00",
+            "ArrivalTime": "09:15:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "09:35:44+01:00",
+            "ArrivalTime": "09:35:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "10:00:44+01:00",
+            "ArrivalTime": "10:00:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "10:25:44+01:00",
+            "ArrivalTime": "10:25:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "10:50:44+01:00",
+            "ArrivalTime": "10:50:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "11:15:44+01:00",
+            "ArrivalTime": "11:15:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "11:40:44+01:00",
+            "ArrivalTime": "11:40:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "12:05:44+01:00",
+            "ArrivalTime": "12:05:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "12:30:44+01:00",
+            "ArrivalTime": "12:30:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "12:45:44+01:00",
+            "ArrivalTime": "12:45:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "13:10:44+01:00",
+            "ArrivalTime": "13:10:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "13:35:44+01:00",
+            "ArrivalTime": "13:35:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "14:00:44+01:00",
+            "ArrivalTime": "14:00:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "14:25:44+01:00",
+            "ArrivalTime": "14:25:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "14:50:44+01:00",
+            "ArrivalTime": "14:50:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "15:15:44+01:00",
+            "ArrivalTime": "15:15:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "15:40:44+01:00",
+            "ArrivalTime": "15:40:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "16:05:44+01:00",
+            "ArrivalTime": "16:05:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "16:15:44+01:00",
+            "ArrivalTime": "16:15:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "16:25:44+01:00",
+            "ArrivalTime": "16:25:44+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "16:35:52+01:00",
+            "ArrivalTime": "16:35:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "16:45:52+01:00",
+            "ArrivalTime": "16:45:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "16:55:52+01:00",
+            "ArrivalTime": "16:55:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "17:05:52+01:00",
+            "ArrivalTime": "17:05:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "17:15:52+01:00",
+            "ArrivalTime": "17:15:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "17:25:52+01:00",
+            "ArrivalTime": "17:25:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "17:35:52+01:00",
+            "ArrivalTime": "17:35:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "17:45:52+01:00",
+            "ArrivalTime": "17:45:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "18:00:52+01:00",
+            "ArrivalTime": "18:00:52+01:00",
+            "date": "2025-10-10"
+        },
+        {
+            "DepartureTime": "18:15:52+01:00",
+            "ArrivalTime": "18:15:52+01:00",
+            "date": "2025-10-10"
+        }
+    ],
+    "returnCode": 200,
+    "dateReturn": "2025-10-11T12:30:24+02:00",
+    "meta": {
+        "function": " getTheoricalTime 'RTM:LNE:140' '1' 'RTM:PNT:00001747' '2025-10-10' "
+    }
+}

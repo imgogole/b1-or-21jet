@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime as dt, time, timedelta
 from matplotlib.pylab import *
 import requests
 import json
@@ -12,22 +12,30 @@ schedule cf. schedule(i + 1) + max_delta_t = schedule(i)
 SECONDS_ONE_DAY         = 60 * 60 * 24
 
 def today() :
-    return datetime.strftime(datetime.now(), "%Y-%m-%d")
+    return dt.strftime(dt.now(), "%Y-%m-%d")
+
+def yesterday():
+    return (dt.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
 def ToDateTime(hms: str) -> datetime :
     fmt = "%H:%M:%S"
     dt = datetime.datetime.strptime(hms, fmt)
     return dt
 
-def write_theoric_schedule() :
-    endpoint_b1 = f"https://api.rtm.fr/front/getTheoricalTime?lineRef=RTM:LNE:139&direction=1&pointRef=RTM:PNT:00001747&date={today()}"
+def effective_variation(values):
+    non_zero = [abs(v) for v in values if v != 0]
+    if not non_zero:
+        return 0
+    return sum(non_zero) / len(non_zero)
 
-    req = requests.get(endpoint_b1)
+def write_theoric_schedule() :
+    endpoint = f"https://api.rtm.fr/front/getTheoricalTime?lineRef=RTM:LNE:140&direction=1&pointRef=RTM:PNT:00001747&date={yesterday()}"
+
+    req = requests.get(endpoint)
 
     if req.status_code == 200 :
         data = req.json()
-        print("request 200")
-        with open("today.txt", "w") as f :
+        with open("datas/today_21jet.json", "w") as f :
             f.write(json.dumps(data))
             print("done writing")
     else :
@@ -38,8 +46,11 @@ def get_datetime_from_item(item) :
     hour = departure_time[:7]
     return ToDateTime(hour)
 
+buses = ["b1", "21jet"]
 
-today_file = open("today.json", "r")
+target = buses[1]
+
+today_file = open(f"datas/today_{target}.json", "r")
 today_json = json.loads(today_file.read())
 today_json = today_json["data"]
 
@@ -76,16 +87,23 @@ for v in d_variations :
 _norm = len(d_variations)                       # normalize from amount
 #norm = max(dict_variation.values())        # normalize from max
 
-print(dict_variation)
+normalize = False
 
-for key, value in dict_variation.items() :
-    dict_variation[key] = dict_variation[key] / _norm
+if normalize :
+    for key, value in dict_variation.items() :
+        dict_variation[key] = dict_variation[key] / _norm
 
 keys = sorted(dict_variation.keys())
 values = [dict_variation[k] for k in keys]
 
+eff_variation = effective_variation(d_variations)
+
+print(eff_variation)
+
 plt.bar(keys, values)
-plt.xlabel('Keys')
-plt.ylabel('Values')
-plt.title('Histogram of Sorted Keys')
+plt.xlabel('Variation (seconds)')
+plt.ylabel('Amount')
+plt.title(f'Amount of variations of {target} schedules')
+plt.savefig("images/21jet_variations.png", dpi=300, bbox_inches="tight")
 plt.show()
+
