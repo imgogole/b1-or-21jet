@@ -13,10 +13,14 @@ ALL_STATIONS_21JET  : list
 
 SEEKING_HEAD_TIME_BETWEEN_REQUESTS = 0.05
 
-def ToDateTime(hms: str) -> datetime :
+def ToDateTime(hms: str) -> datetime:
     fmt = "%H:%M:%S"
-    dt = datetime.strptime(hms, fmt)
-    return dt
+    t = datetime.strptime(hms, fmt).time()
+    return datetime.combine(date(1970, 1, 2), t)
+
+def Now() -> datetime:
+    n = datetime.now()
+    return datetime(1970, 1, 2, n.hour, n.minute, n.second, n.microsecond)
 
 def ToSeconds(hms: str) -> float :
     dt = ToDateTime(hms)
@@ -98,10 +102,13 @@ class Algorithms :
         if next_b1_hms is None and next_21jet_hms is None :
             return 0, 0
         
-        current_hms_b1 = ToDateTime(next_b1_hms).timestamp()
-        current_hms_21jet = ToDateTime(next_21jet_hms).timestamp()
+        next_b1_hms = ToDateTime(next_b1_hms)
+        next_21jet_hms = ToDateTime(next_21jet_hms)
+        
+        current_hms_b1 = next_b1_hms.timestamp()
+        current_hms_21jet = next_21jet_hms.timestamp()
 
-        now = datetime.now().replace(year=ToDateTime(next_b1_hms).year, month=ToDateTime(next_b1_hms).month, day=ToDateTime(next_b1_hms).day).timestamp()
+        now = Now().timestamp()
 
         accumulator_b1 = (current_hms_b1 - now)
         accumulator_21jet = (current_hms_21jet - now)
