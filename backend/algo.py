@@ -59,7 +59,7 @@ class Algorithms :
         if (algo == 0) :
             return Algorithms.SevenMinutesRule()
         elif (algo == 1) :
-            return Algorithms.SeekingHeadRule()
+            return Algorithms.SeekingHeadRule(theorems)
 
     @staticmethod
     def SevenMinutesRule() :
@@ -88,7 +88,7 @@ class Algorithms :
         return 1, 0
     
     @staticmethod
-    def SeekingHeadRule() :
+    def SeekingHeadRule(theorems) :
         REALTIME_B1.Update()
         REALTIME_21JET.Update()
 
@@ -152,7 +152,8 @@ class Algorithms :
         with open("../datas/seeking_head/theoric_gap_b1.json", "r") as f :
             theoric_gap_b1 = json.loads(f.read())
             while i < len(ALL_STATIONS_B1) :
-                gap = theoric_gap_b1[str(i)]
+                gap_choice = theoric_gap_b1[str(i)]
+                gap = gap_choice["max"] if Theorem.SEEKING_HEAD_CONSIDER_MAX in theorems else gap_choice["average"]
                 accumulator_b1 += gap
                 i += 1
 
@@ -187,7 +188,8 @@ class Algorithms :
         with open("../datas/seeking_head/theoric_gap_21jet.json", "r") as f :
             theoric_gap_21jet = json.loads(f.read())
             while i < len(ALL_STATIONS_21JET) :
-                gap = theoric_gap_21jet[str(i)]
+                gap_choice = theoric_gap_21jet[str(i)]
+                gap = gap_choice["max"] if Theorem.SEEKING_HEAD_CONSIDER_MAX in theorems else gap_choice["average"]
                 accumulator_21jet += gap
                 i += 1
 
