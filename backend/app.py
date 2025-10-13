@@ -5,7 +5,14 @@ from searcher import *
 import logging
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, resources={r"/api/*": {"origins": [
+    "https://b1-or-21jet.fr",
+    "https://www.b1-or-21jet.fr",
+    "https://b1-or-21jet-frontend.onrender.com",
+    "http://localhost:5000",
+    "http://localhost:3000"
+]}})
 
 Algorithms.InitConstants()
 
