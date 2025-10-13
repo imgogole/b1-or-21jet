@@ -70,7 +70,10 @@ for i_0 in range(len(b1_all_schedules) - 1) :
     b1 = b1_all_schedules[i_1]
     for i in range (len(b0)) :
         gaps.append(b1[i] - b0[i])
-    dic_b1[str(i_0)] = sum(gaps) / len(gaps)
+
+    value = sum(gaps) / len(gaps)
+
+    dic_b1[str(i_0)] = value
 
 for i_0 in range(len(_21jet_all_schedules) - 1) :
     i_1 = i_0 + 1
@@ -79,7 +82,9 @@ for i_0 in range(len(_21jet_all_schedules) - 1) :
     b1 = _21jet_all_schedules[i_1]
     for i in range (len(b0)) :
         gaps.append(b1[i] - b0[i])
-    dic_21jet[str(i_0)] = sum(gaps) / len(gaps)
+
+    value = sum(gaps) / len(gaps)
+    dic_21jet[str(i_0)] = value
     
 with open("../datas/seeking_head/theoric_gap_b1.json", "w") as f:
     f.write(json.dumps(dic_b1))
