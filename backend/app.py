@@ -1,9 +1,11 @@
 from flask import Flask
+from flask_cors import CORS
 from markupsafe import escape
 from searcher import *
 import logging
 
 app = Flask(__name__)
+CORS(app)
 
 Algorithms.InitConstants()
 
@@ -28,4 +30,7 @@ def on_request(algorithm :int, theorems: int) :
         return Result.NoResult()
 
     return result.Success()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
 

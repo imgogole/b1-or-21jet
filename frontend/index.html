@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 ou 21JET</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            min-height: 100vh;
+            background-color: #1d1d1d;
+            color: #d3d3d3;
+            font-family: 'Fira Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-y: auto;
+            padding-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+
+        #image-container {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+        }
+
+        select {
+            width: 200px;
+            padding: 10px 12px;
+            background-color: #3c3c3c;
+            color: #dddddd;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Fira Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        select:focus {
+            box-shadow: 0 0 5px #1db954;
+            background-color: #3c3c3c;
+        }
+
+
+        .loading {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #444;
+            border-top: 5px solid #1db954;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            color: #ff4c4c;
+            margin-top: 10px;
+        }
+
+        #flags-dropdown {
+            height: auto;
+            max-height: none;
+            overflow: hidden;
+        }
+
+        #description {
+            margin-top: 30px;
+            font-size: 85%;
+            font-style: italic;
+            color: #aaaaaa;
+            text-align: center;
+            padding: 0 65px;
+        }
+
+
+        a {
+            color: #66ccff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        #last-update {
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        #flags-dropdown-custom {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .option {
+            padding: 10px 12px;
+            background-color: #3c3c3c;
+            color: #9f9f9f;
+            border-radius: 8px;
+            font-family: 'Fira Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option.selected {
+            font-weight: bold;
+            background-color: #3c3c3c;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>B1 ou 21JET</h1>
+    <div class="container">
+        <div id="image-container">
+            <div class="loading" id="loading"></div>
+        </div>
+        <div id="last-update"></div>
+        <select id="enum-dropdown">
+            <option value="0" selected>Règle des 7 minutes</option>
+            <option value="1">Tête chercheuse</option>
+        </select>
+        <div id="flags-dropdown-custom">
+            <div class="option" data-value="1" related="1">Écart maximum</div>
+        </div>
+        <div class="error" id="error-message"></div>
+        <div id="description">Ce site détermine à la station <b>Métro Rond Point du Prado</b> quel bus prendre entre le
+            <b>B1</b> et le <b>21JET</b> pour arriver le plus tôt possible à <b>Luminy</b>.
+            <br>
+            Toutes les informations et le code source sur mon <a href="https://github.com/imgogole/b1-or-21jet"
+                target="_blank">GitHub</a>.
+        </div>
+    </div>
+
+    <script>
+        const imageContainer = document.getElementById('image-container');
+        const loading = document.getElementById('loading');
+        const enumDropdown = document.getElementById('enum-dropdown');
+        const lastUpdate = document.getElementById('last-update');
+        const errorMessage = document.getElementById('error-message');
+        const flagsContainer = document.getElementById('flags-dropdown-custom');
+
+        let selectedFlags = 0;
+
+        function setFavicon(imgSrc) {
+            let link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.getElementsByTagName('head')[0].appendChild(link);
+            }
+            link.href = imgSrc;
+        }
+
+        function updateFlagsVisibility() {
+            const selected = enumDropdown.value;
+            const options = flagsContainer.getElementsByClassName("option");
+
+            Array.from(options).forEach(div => {
+                const related = div.getAttribute('related');
+                div.style.display = related === selected ? 'flex' : 'none';
+                if (related !== selected) div.classList.remove('selected');
+            });
+        }
+
+
+        flagsContainer.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('option')) return;
+            const flagValue = parseInt(e.target.dataset.value);
+
+            if (e.target.classList.contains('selected')) {
+                e.target.classList.remove('selected');
+                selectedFlags &= ~flagValue;
+            } else {
+                e.target.classList.add('selected');
+                selectedFlags |= flagValue;
+            }
+
+            fetchData();
+        });
+
+        const fetchData = () => {
+            updateFlagsVisibility();
+
+            loading.style.display = 'block';
+            imageContainer.innerHTML = '';
+            imageContainer.appendChild(loading);
+            errorMessage.textContent = '';
+
+            setFavicon('');
+
+            const enumValue = parseInt(enumDropdown.value);
+            const flags = selectedFlags;
+
+            const url = `http://localhost:5000/api/${enumValue}/${flags}`;
+
+
+            fetch(url, {
+                method: "get",
+                headers: new Headers({
+                    "ngrok-skip-browser-warning": "69420",
+                }),
+            })
+                .then(response => {
+                    console.log(response);
+                    if (!response.ok) throw new Error('Erreur réseau');
+                    return response.json();
+                })
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.status !== 'success') {
+                        throw new Error('Erreur dans la réponse');
+                    }
+                    if (data['21jet_prob'] === 0 && data['b1_prob'] === 0) {
+                        imageContainer.textContent = "Pas de bus disponible";
+                        setFavicon('');
+                    } else if (data['21jet_prob'] > data['b1_prob']) {
+                        const img = document.createElement('img');
+                        img.src = 'images/21jet_logo.svg';
+                        setFavicon('images/21jet_logo.svg');
+                        imageContainer.appendChild(img);
+                    } else {
+                        const img = document.createElement('img');
+                        img.src = 'images/b1_logo.svg';
+                        setFavicon('images/b1_logo.svg');
+                        imageContainer.appendChild(img);
+                    }
+
+                    const date = new Date(data.time * 1000);
+                    lastUpdate.textContent = `Dernière mise à jour : ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+                })
+                .catch(err => {
+                    loading.style.display = 'none';
+                    imageContainer.textContent = '';
+                    errorMessage.textContent = `Erreur: ${err.message}`;
+                });
+        };
+
+        window.addEventListener('load', fetchData);
+        enumDropdown.addEventListener('change', fetchData);
+    </script>
+
+</body>
+
+</html>

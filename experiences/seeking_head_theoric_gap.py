@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime
+from datetime import datetime, date
 from time import sleep
 import json
 
@@ -14,10 +14,10 @@ line_21jet = "RTM:LNE:140"
 
 choosen_date = "2025-10-13" 
 
-def ToDateTime(hms: str) -> datetime :
+def ToDateTime(hms: str) -> datetime:
     fmt = "%H:%M:%S"
-    dt = datetime.strptime(hms, fmt)
-    return dt
+    t = datetime.strptime(hms, fmt).time()
+    return datetime.combine(date(2025, 1, 2), t)
 
 def get_api_url(line, station, date) :
     return f"https://api.rtm.fr//front/getTheoricalTime?lineRef={line}&direction=1&pointRef={station}&date={date}"
@@ -71,9 +71,8 @@ for i_0 in range(len(b1_all_schedules) - 1) :
     for i in range (len(b0)) :
         gaps.append(b1[i] - b0[i])
 
-    value = sum(gaps) / len(gaps)
-
-    dic_b1[str(i_0)] = value
+    value_avg, value_max = sum(gaps) / len(gaps), max(gaps)
+    dic_b1[str(i_0)] = { "average" : value_avg, "max" : value_max }
 
 for i_0 in range(len(_21jet_all_schedules) - 1) :
     i_1 = i_0 + 1
@@ -83,8 +82,8 @@ for i_0 in range(len(_21jet_all_schedules) - 1) :
     for i in range (len(b0)) :
         gaps.append(b1[i] - b0[i])
 
-    value = sum(gaps) / len(gaps)
-    dic_21jet[str(i_0)] = value
+    value_avg, value_max = sum(gaps) / len(gaps), max(gaps)
+    dic_21jet[str(i_0)] = { "average" : value_avg, "max" : value_max }
     
 with open("../datas/seeking_head/theoric_gap_b1.json", "w") as f:
     f.write(json.dumps(dic_b1))
