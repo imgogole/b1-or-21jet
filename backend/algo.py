@@ -11,6 +11,8 @@ THEORIC_21JET  = Data(DatasAPI.TheoricLinePointUrl(LINE_21JET, PNT_ROND_POINT_DU
 ALL_STATIONS_B1     : list
 ALL_STATIONS_21JET  : list
 
+SEEKING_HEAD_TIME_BETWEEN_REQUESTS = 0.05
+
 def ToDateTime(hms: str) -> datetime :
     fmt = "%H:%M:%S"
     dt = datetime.strptime(hms, fmt)
@@ -45,7 +47,7 @@ class Algorithms :
         """
 
         # Ignores if the last 21Jet passed
-        if datetime.now().time() < HOUR_LAST_21JET :
+        if datetime.now().time() > HOUR_LAST_21JET :
            print("The 21Jet bus can't pass for now, take B1")
            return 1, 0
 
@@ -99,7 +101,7 @@ class Algorithms :
         current_hms_b1 = ToDateTime(next_b1_hms).timestamp()
         current_hms_21jet = ToDateTime(next_21jet_hms).timestamp()
 
-        now = datetime.now().timestamp()
+        now = datetime.now().replace(year=ToDateTime(next_b1_hms).year, month=ToDateTime(next_b1_hms).month, day=ToDateTime(next_b1_hms).day).timestamp()
 
         accumulator_b1 = (current_hms_b1 - now)
         accumulator_21jet = (current_hms_21jet - now)
@@ -117,7 +119,7 @@ class Algorithms :
 
             #As long as we do an update, it's better to sleep a while to avoid being blocked by the RTM API, even if they don't give a fuck about 5000 requests per sec from a 21 yo nerd
             station_i.Update()
-            tme.sleep(0.25)
+            tme.sleep(SEEKING_HEAD_TIME_BETWEEN_REQUESTS)
 
             b1_at_i_hms = station_i.Get(f"temps_reel/{look_at_b1}/DepartureTime/Hour")
             if b1_at_i_hms is None :
@@ -141,7 +143,7 @@ class Algorithms :
         ## theoric
 
         with open("../datas/seeking_head/theoric_gap_b1.json", "r") as f :
-            theoric_gap_b1 = json.loads(f)
+            theoric_gap_b1 = json.loads(f.read())
             while i < len(ALL_STATIONS_B1) :
                 gap = theoric_gap_b1[str(i)]
                 accumulator_b1 += gap
@@ -156,7 +158,7 @@ class Algorithms :
         while look_at_21jet < 2 and not cant_further_21jet and i < len(ALL_STATIONS_21JET) :
             station_i: Data = ALL_STATIONS_21JET[i]
             station_i.Update()
-            tme.sleep(0.25)
+            tme.sleep(SEEKING_HEAD_TIME_BETWEEN_REQUESTS)
 
             _21jet_at_i_hms = station_i.Get(f"temps_reel/{look_at_21jet}/DepartureTime/Hour")
             if _21jet_at_i_hms is None :
@@ -176,7 +178,7 @@ class Algorithms :
         ## theoric
 
         with open("../datas/seeking_head/theoric_gap_21jet.json", "r") as f :
-            theoric_gap_21jet = json.loads(f)
+            theoric_gap_21jet = json.loads(f.read())
             while i < len(ALL_STATIONS_21JET) :
                 gap = theoric_gap_21jet[str(i)]
                 accumulator_21jet += gap

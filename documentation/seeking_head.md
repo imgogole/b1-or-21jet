@@ -16,7 +16,7 @@ __Avec :__
 - n : le nombre de stations entre MRPDP et Luminy (excluant MRPDP)
 - c_i : l'écart de temps d'un bus entre une station S_i et S_(i-1)
 
-On peut également c_i par :
+On peut également écrire c_i par :
 
 > c_i = T_B1_S_i - T_B1_S_(i-1)
 
