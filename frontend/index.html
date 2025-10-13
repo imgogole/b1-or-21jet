@@ -112,12 +112,6 @@
             margin-top: 10px;
         }
 
-        #flags-dropdown {
-            height: auto;
-            max-height: none;
-            overflow: hidden;
-        }
-
         #description {
             margin-top: 30px;
             font-size: 85%;
@@ -156,19 +150,25 @@
         }
 
         .option {
-            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
             background-color: #3c3c3c;
             color: #9f9f9f;
             border-radius: 8px;
             font-family: 'Fira Sans', sans-serif;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: color 0.2s ease, font-size 0.2s ease;
+            font-size: 13px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .option.selected {
             font-weight: bold;
-            background-color: #3c3c3c;
-            color: #ffffff;
+            color: #c8ffb9;
         }
     </style>
 </head>
@@ -262,7 +262,7 @@
             const enumValue = parseInt(enumDropdown.value);
             const flags = selectedFlags;
 
-            const url = `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
+            const url = window.location.hostname.includes("localhost") ? `http://localhost:5000/api/${enumValue}/${flags}` : `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
 
 
             fetch(url, {
@@ -297,7 +297,7 @@
                     }
 
                     const date = new Date(data.time * 1000);
-                    lastUpdate.textContent = `Dernière mise à jour : ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+                    lastUpdate.innerHTML = `Dernière mise à jour : <b>${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}</b>`;
                 })
                 .catch(err => {
                     loading.style.display = 'none';

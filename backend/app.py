@@ -13,7 +13,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logg
 
 @app.route("/")
 def on_home_page() :
-    return escape("Hello, World !"), 200
+    return escape("MIPS MIPS, c'est moi le MIPS"), 200
 
 @app.route("/api/<int:algorithm>/<int:theorems>", methods=["GET"])
 def on_request(algorithm :int, theorems: int) :
@@ -32,5 +32,5 @@ def on_request(algorithm :int, theorems: int) :
     return result.Success()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
