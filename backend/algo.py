@@ -45,7 +45,7 @@ class Algorithms :
         """
 
         # Ignores if the last 21Jet passed
-        if False and datetime.now().time() < HOUR_LAST_21JET :
+        if datetime.now().time() < HOUR_LAST_21JET :
            print("The 21Jet bus can't pass for now, take B1")
            return 1, 0
 
