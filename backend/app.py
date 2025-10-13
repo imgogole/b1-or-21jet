@@ -1,11 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask
 from markupsafe import escape
 from searcher import *
-import json
-import threading
 import logging
 
 app = Flask(__name__)
+
+Algorithms.InitConstants()
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
 

@@ -1,0 +1,18 @@
+Michelet Huveaune|RTM:PNT:00001748|1
+Michelet Ramon|RTM:PNT:00001749|1
+Michelet Bousquet|RTM:PNT:00001751|1
+Le Corbusier|RTM:PNT:00001752|1
+Michelet Luce|RTM:PNT:00001753|1
+Michelet Taine|RTM:PNT:00001754|1
+Michelet Bonneaude|RTM:PNT:00001755|1
+Obélisque|RTM:PNT:00001757|2
+Ste Trinité|RTM:PNT:00004251|1
+Résidence Le Montmorency|RTM:PNT:00004479|1
+Tomasi|RTM:PNT:00001760|1
+CC Valmante|RTM:PNT:00001761|2
+Résidence Valmont Redon|RTM:PNT:00001763|1
+Le Redon|RTM:PNT:00001764|1
+Luminy Lachamp|RTM:PNT:00001766|2
+HLM de Luminy|RTM:PNT:00001767|1
+Luminy Complexe sportif|RTM:PNT:00001768|1
+Luminy Kedge BS|RTM:PNT:00001769|2
