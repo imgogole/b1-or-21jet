@@ -6,7 +6,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ce site détermine à la station Métro Rond Point du Prado quel bus prendre entre le B1 et le 21JET pour arriver le plus tôt possible à Luminy.">
+    <meta name="description"
+        content="Ce site détermine à la station Métro Rond Point du Prado quel bus prendre entre le B1 et le 21JET pour arriver le plus tôt possible à Luminy.">
     <meta name="author" content="imgogole">
     <meta name="keywords" content="marseille, rtm, bus, B1, 21JET, Luminy, transport, métro">
     <link rel="icon" type="image/png" href="images/logo.png">
@@ -227,6 +228,7 @@
 
         flagsContainer.addEventListener('click', (e) => {
             if (!e.target.classList.contains('option')) return;
+
             const flagValue = parseInt(e.target.dataset.value);
 
             if (e.target.classList.contains('selected')) {
@@ -236,6 +238,11 @@
                 e.target.classList.add('selected');
                 selectedFlags |= flagValue;
             }
+
+            localStorage.setItem('lastSelection', JSON.stringify({
+                enumValue: enumDropdown.value,
+                flags: selectedFlags
+            }));
 
             fetchData();
         });
@@ -296,8 +303,35 @@
                 });
         };
 
-        window.addEventListener('load', fetchData);
-        enumDropdown.addEventListener('change', fetchData);
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('lastSelection');
+            if (saved) {
+                const { enumValue, flags } = JSON.parse(saved);
+                enumDropdown.value = enumValue;
+                selectedFlags = flags;
+
+                // Mettre à jour l'affichage des options
+                const options = flagsContainer.getElementsByClassName('option');
+                Array.from(options).forEach(div => {
+                    const flagValue = parseInt(div.dataset.value);
+                    if ((flags & flagValue) !== 0) {
+                        div.classList.add('selected');
+                    } else {
+                        div.classList.remove('selected');
+                    }
+                });
+            }
+
+            fetchData();
+        });
+
+        enumDropdown.addEventListener('change', () => {
+            localStorage.setItem('lastSelection', JSON.stringify({
+                enumValue: enumDropdown.value,
+                flags: selectedFlags
+            }));
+            fetchData();
+        });
     </script>
 
 </body>
