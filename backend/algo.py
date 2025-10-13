@@ -1,6 +1,8 @@
 from names import *
 from datas import *
 
+from seekinghead import SeekingHead
+
 REALTIME_B1    = Data(DatasAPI.RealtimeLinePointUrl(LINE_B1, PNT_ROND_POINT_DU_PRADO, DIR_RPDP_TO_LUMINY_B1))
 REALTIME_21JET = Data(DatasAPI.RealtimeLinePointUrl(LINE_21JET, PNT_ROND_POINT_DU_PRADO, DIR_RPDP_TO_LUMINY_21JET))
 
@@ -59,7 +61,7 @@ class Algorithms :
     
     @staticmethod
     def SeekingHeadRule() :
-        THEORIC_B1.Update()
-        THEORIC_21JET.Update()
+        REALTIME_B1.Update()
+        REALTIME_21JET.Update()
 
-    
+        SeekingHead()

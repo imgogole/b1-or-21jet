@@ -46,6 +46,24 @@ def get_datetime_from_item(item) :
     hour = departure_time[:7]
     return ToDateTime(hour)
 
+def write_all_stations() :
+    endpoint = f"https://api.rtm.fr/front/getStations/RTM:RTE:9000139RTMA"
+    req = requests.get(endpoint)
+
+    if req.status_code == 200 :
+        data = req.json()["data"]
+        content = ""
+        for station in data :
+            content += station["Name"] + "|" + station["refNEtex"] + "\n"
+        with open("datas/stations_21jet.txt", "w", encoding="utf-8") as f :
+            f.write(content)
+            print("done writing")
+    else :
+        print("failed")
+
+write_all_stations()
+exit()
+
 buses = ["b1", "21jet"]
 
 target = buses[1]
