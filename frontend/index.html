@@ -2,10 +2,14 @@
 <html lang="fr">
 
 <head>
+    <title>B1 ou 21JET</title>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B1 ou 21JET</title>
-    <link rel="icon" type="image/png" href="images/icon.png">
+    <meta name="description" content="Ce site détermine à la station Métro Rond Point du Prado quel bus prendre entre le B1 et le 21JET pour arriver le plus tôt possible à Luminy.">
+    <meta name="author" content="imgogole">
+    <meta name="keywords" content="marseille, rtm, bus, B1, 21JET, Luminy, transport, métro">
+    <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -238,13 +242,12 @@
 
         const fetchData = () => {
             updateFlagsVisibility();
+            setFavicon('images/logo.png');
 
             loading.style.display = 'block';
             imageContainer.innerHTML = '';
             imageContainer.appendChild(loading);
             errorMessage.textContent = '';
-
-            setFavicon('');
 
             const enumValue = parseInt(enumDropdown.value);
             const flags = selectedFlags;
@@ -270,7 +273,7 @@
                     }
                     if (data['21jet_prob'] === 0 && data['b1_prob'] === 0) {
                         imageContainer.textContent = "Pas de bus disponible";
-                        setFavicon('');
+                        setFavicon('images/logo.png');
                     } else if (data['21jet_prob'] > data['b1_prob']) {
                         const img = document.createElement('img');
                         img.src = 'images/21jet_logo.svg';
