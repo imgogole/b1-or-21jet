@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title>Documentation - B1 ou 21JET</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Ce site détermine à la station Métro Rond Point du Prado quel bus prendre entre le B1 et le 21JET pour arriver le plus tôt possible à Luminy.">
+    <meta name="author" content="imgogole">
+    <meta name="theme-color" content="#1d1d1d">
+    <meta name="keywords" content="marseille, rtm, bus, B1, 21JET, Luminy, transport, métro">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+
+</head>
+
+<body>
+    <h1>Documentation - <a href="https://www.b1-or-21jet.fr">B1 ou 21JET</a></h1>
+    <div class="container">
+        <div class="doc">
+            <p>Cette page fournit la documentation complète du site <b>B1 ou 21JET</b>, pour comprendre son fonctionnement, les différentes méthodes utilisées, ainsi qu'une méthodologie pour déterminer les paramètres qui vous conviennent.</p>
+            <br>
+            <span class="doc_info"><span style="color:#fa4d4d;">Attention : </span>Ce site ne donne qu'une estimation
+                précise du meilleur bus à prendre, il n'y a personne devant l'arrêt qui guette les horaires et qui fait
+                des calculs extrêmement compliqués pour vous permettre de gratter 3 minutes. Prenez les informations
+                fournis avec de très grosses pincettes, les données utilisés viennent de l'API officiel de la RTM. Oui,
+                j'avais rien d'autre à faire de ma vie que de faire ce site.</span>
+            <br><br><br>
+            <img id="img21jet" src="images/21jet.jpg" alt="Image d'un 21JET"
+                attributionsrc="https://www.facebook.com/photo.php?fbid=3513742055369667&id=111617545582152&set=a.2688495271227687">
+            <span class="img_description">Rare image du 21JET en activité un lundi matin</span>
+            <br><br><br>
+            <h2>Utilisation</h2>
+            <br>
+            <b>B1 ou 21JET</b> détermine à la station <b>Métro Rond Point du Prado</b> quel bus prendre entre le
+            <b>B1</b> et le <b>21JET</b> pour arriver le plus rapidement possible à la station <b>Luminy Parc National des
+                Calanques</b>.
+            <br>
+            Lorsque vous arrivez sur le site, selon les paramètres sélectionnés, le logo du <b>B1</b> s'affichera s'il faut prendre le B1, et le logo du <b>21JET</b> s'affichera s'il faut prendre le 21JET.
+            <br><br>
+            Les données se mettent à jour toutes les <b>60 secondes</b>. Vous pouvez rafraîchir la page pour obtenir les derniers résultats calculés. Il se peut que ces résultats ne soient pas encore disponibles immédiatement, comptez un léger délai selon la puissance de nos supers ordinateurs.
+            <br><br>
+            Les paramètres que vous pouvez configurer sont :<br>
+            - Les <b>algorithmes</b> : Vous pouvez choisir la méthode utilisée pour calculer le bus le plus rapide.<br>
+            - Les <b>théorèmes</b> : Vous pouvez choisir aucun, un ou plusieurs théorèmes pour chaque algorithme. Ils
+            vous permettent d'impacter les calculs en ajoutant des aléas et des contrôles.
+            <br><br>
+                        <h2>Algorithmes</h2>
+            <br>
+            <h3>Seven minutes rule</h3>
+            <br>
+            <p>L'algorithme de <b>la règle des 7 minutes</b> précise que si le prochain <b>21JET</b> arrive au plus 7 minutes après le prochain <b>B1</b>, alors il faut prendre le <b>21JET</b>.</p>
+            <br>
+            <p>Cette simple règle est un moyen efficace d'estimer grossièrement mais rapidement le meilleur bus à prendre. Nous vous conseillons de l'utiliser si vous n'avez vraiment pas le temps d'attendre car le B1 est juste devant vous, sinon, utilisez un meilleur algorithme plus performant.</p>
+            <br>
+            <h3>Seeking head</h3>
+            <br>
+            <p>L'algorithme de la <b>Tête chercheuse</b> consiste à accumuler les écarts des temps réels de trajet entre chaque
+                station.
+                En théorie, on obtient une estimation proche du temps réel entre Métro Rond Point du Prado et Luminy. Cependant, l'API de la RTM limite la vue des derniers bus traquables à 2. Cela veut dire que traquer un bus devient impossible si le prochain bus à prendre à Métro Rond Point du Prado n'est pas au plus l'avant-dernier bus qui arrivera à Luminy.</p>
+            <br>
+            <p>Par conséquent, nous allons traquer le bus jusqu'à qu'il ne soit plus traquable à une station \( S_{n} \). À
+                partir de cette station, nous allons utiliser les valeurs théoriques. Ces valeurs théoriques seront des
+                moyennes des écarts théoriques à tout temps, car on considère que l'heure qu'il est n'influence pas ces valeurs et
+                qu'elles resteront, dans le meilleur des cas, constantes.</p>
+            <br>
+        </div>
+
+        <div class="error" id="error-message"></div>
+        <div id="description">
+            Découvrez maintenant le bus à prendre pour être le plus en avance possible <a
+                href="https://b1-or-21jet.fr/">ici</a>. Merci <b>Elphlach</b> pour le repas du Crous à 1€.
+        </div>
+        <div id="mention_honorable">@imgogole</div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
