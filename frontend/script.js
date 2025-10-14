@@ -4,6 +4,7 @@ const enumDropdown = document.getElementById('enum-dropdown');
 const lastUpdate = document.getElementById('last-update');
 const errorMessage = document.getElementById('error-message');
 const flagsContainer = document.getElementById('flags-dropdown-custom');
+const longTimeLoading = document.getElementById('long-time-loading');
 
 let selectedFlags = 0;
 
@@ -55,6 +56,7 @@ const fetchData = () => {
     setFavicon('images/logo.png');
 
     loading.style.display = 'block';
+    longTimeLoading.style.display = 'none';
     imageContainer.innerHTML = '';
     imageContainer.appendChild(loading);
     errorMessage.textContent = '';
@@ -64,6 +66,9 @@ const fetchData = () => {
 
     const url = window.location.hostname.includes("localhost") ? `http://localhost:5000/api/${enumValue}/${flags}` : `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
 
+    let longLoadingTimer = setTimeout(() => {
+        longTimeLoading.style.display = 'block';
+    }, 10000);
 
     fetch(url, {
         method: "get",
@@ -72,11 +77,14 @@ const fetchData = () => {
         }),
     })
         .then(response => {
+            clearTimeout(longLoadingTimer);
+            longTimeLoading.style.display = 'none';
             console.log(response);
             if (!response.ok) throw new Error('Erreur réseau');
             return response.json();
         })
         .then(data => {
+
             loading.style.display = 'none';
             if (data.status !== 'success') {
                 throw new Error('Erreur dans la réponse');
@@ -100,6 +108,8 @@ const fetchData = () => {
             lastUpdate.innerHTML = `Dernière mise à jour : <b>${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}</b>`;
         })
         .catch(err => {
+            clearTimeout(longLoadingTimer);
+            longTimeLoading.style.display = 'none';
             loading.style.display = 'none';
             imageContainer.textContent = '';
             errorMessage.textContent = `Erreur: ${err.message}`;
