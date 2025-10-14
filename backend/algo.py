@@ -69,7 +69,7 @@ class Algorithms :
         next_b1_hms = REALTIME_B1.Get("temps_reel/0/DepartureTime/Hour")
         next_21jet_hms = REALTIME_21JET.Get("temps_reel/0/DepartureTime/Hour")
    
-        print("[SEVEN_MINUTES_RULE] Prochain B1 :", next_b1_hms + ". Prochain 21Jet :", next_21jet_hms)
+        print("[SEVEN_MINUTES_RULE] Prochain B1 :", str(next_b1_hms) + ". Prochain 21Jet :", str(next_21jet_hms))
 
         if next_b1_hms is None and next_21jet_hms is not None :
             return 0, 1
