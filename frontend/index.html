@@ -150,6 +150,7 @@
         }
 
         .option {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,14 +158,51 @@
             background-color: #3c3c3c;
             color: #9f9f9f;
             border-radius: 8px;
-            font-family: 'Fira Sans', sans-serif;
-            cursor: pointer;
-            transition: color 0.2s ease, font-size 0.2s ease;
             font-size: 13px;
+            cursor: pointer;
             text-align: center;
             width: 100%;
-            box-sizing: border-box;
+            height: 36px;
         }
+
+        .option .tooltip {
+            position: absolute;
+            font-weight: normal;
+            bottom: 120%;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(5px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            white-space: normal;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .option:hover .tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .option .tooltip::before {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
 
         .option.selected {
             font-weight: bold;
@@ -185,7 +223,26 @@
             <option value="1">Tête chercheuse</option>
         </select>
         <div id="flags-dropdown-custom">
-            <div class="option" data-value="1" related="1">Écart maximum</div>
+            <!-- Tooltip
+             Color : <span style="color:red">Texte rouge</span>
+             Saut : <br>
+            -->
+            <div class="option" data-value="1" related="1">
+                Écart maximum
+                <div class="tooltip">
+                    <span style="color:rgb(255, 113, 113)">Désactivé : </span> Les écarts théoriques moyens des stations intraquables seront pris en compte.
+                    <br>
+                    <span style="color:rgb(157, 255, 156)">Activé : </span> Les écarts théoriques maximaux des stations intraquables seront pris en compte.
+                    <br>
+                </div>
+            </div>
+            <div class="option" data-value="2" related="1">
+                Théorème d'Obélisque
+                <div class="tooltip">
+                    <span style="color:rgb(157, 255, 156)">Activé : </span> Un ralentissement est appliqué à toutes les stations entre <b>Métro Rond Point du Prado</b> et <b>Obélisque</b>, le temps de parcours du B1 sera pénalisé.
+                    <br>
+                </div>
+            </div>
         </div>
         <div class="error" id="error-message"></div>
         <div id="description">Ce site détermine à la station <b>Métro Rond Point du Prado</b> quel bus prendre entre le
