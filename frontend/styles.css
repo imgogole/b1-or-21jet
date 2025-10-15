@@ -23,7 +23,32 @@ body {
 
 h1 {
     margin-bottom: 30px;
+    text-align: center;
+    font-size: 26px;
 }
+
+h1 .title-inline {
+    display: inline;
+}
+
+h1 .title-break {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 22px;
+    }
+
+    h1 .title-inline {
+        display: none;
+    }
+
+    h1 .title-break {
+        display: inline;
+    }
+}
+
 
 .container {
     display: flex;
