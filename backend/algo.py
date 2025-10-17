@@ -113,7 +113,7 @@ class Algorithms :
         accumulator_b1 = (current_hms_b1 - now)
         accumulator_21jet = (current_hms_21jet - now)
 
-        slowness_obelisk_theorem = 1.4 if Theorem.OBELISK_THEOREM in theorems else 1.0
+        slowness_obelisk_theorem = 1.25 if Theorem.OBELISK_THEOREM in theorems else 1.0
 
         # B1
 
