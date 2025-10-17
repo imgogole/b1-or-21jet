@@ -2,6 +2,7 @@ import requests
 from datetime import datetime, date
 from time import sleep
 import json
+import math
 
 """
 
@@ -12,7 +13,7 @@ Generates the theoric_gap_b1.json and theoric_gap_21jet.json
 line_b1 = "RTM:LNE:139"
 line_21jet = "RTM:LNE:140"
 
-choosen_date = "2025-10-13" 
+choosen_date = "2025-10-20" 
 
 def ToDateTime(hms: str) -> datetime:
     fmt = "%H:%M:%S"
@@ -71,8 +72,9 @@ for i_0 in range(len(b1_all_schedules) - 1) :
     for i in range (len(b0)) :
         gaps.append(b1[i] - b0[i])
 
-    value_avg, value_max = sum(gaps) / len(gaps), max(gaps)
-    dic_b1[str(i_0)] = { "average" : value_avg, "max" : value_max }
+    value_avg, value_max, value_range = sum(gaps) / len(gaps), max(gaps), max(gaps) - min(gaps)
+    value_std = math.sqrt(sum((g - value_avg) ** 2 for g in gaps) / len(gaps))
+    dic_b1[str(i_0)] = { "average" : value_avg, "max" : value_max, "range": value_range, "std": value_std }
 
 for i_0 in range(len(_21jet_all_schedules) - 1) :
     i_1 = i_0 + 1
@@ -83,7 +85,7 @@ for i_0 in range(len(_21jet_all_schedules) - 1) :
         gaps.append(b1[i] - b0[i])
 
     value_avg, value_max = sum(gaps) / len(gaps), max(gaps)
-    dic_21jet[str(i_0)] = { "average" : value_avg, "max" : value_max }
+    dic_21jet[str(i_0)] ={ "average" : value_avg, "max" : value_max, "range": value_range, "std": value_std }
     
 with open("../datas/seeking_head/theoric_gap_b1.json", "w") as f:
     f.write(json.dumps(dic_b1))

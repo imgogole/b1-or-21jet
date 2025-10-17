@@ -113,6 +113,8 @@ class Algorithms :
         accumulator_b1 = (current_hms_b1 - now)
         accumulator_21jet = (current_hms_21jet - now)
 
+        slowness_obelisk_theorem = 1.4 if Theorem.OBELISK_THEOREM in theorems else 1.0
+
         # B1
 
         ## realtime
@@ -153,7 +155,13 @@ class Algorithms :
             theoric_gap_b1 = json.loads(f.read())
             while i < len(ALL_STATIONS_B1) :
                 gap_choice = theoric_gap_b1[str(i)]
-                gap = gap_choice["max"] if Theorem.SEEKING_HEAD_CONSIDER_MAX in theorems else gap_choice["average"]
+                gap : float
+                if Theorem.SEEKING_HEAD_CONSIDER_MAX in theorems :
+                    gap = gap_choice["max"] 
+                else :
+                    gap = gap_choice["average"] + gap_choice["std"]
+                if i <= 8 :
+                    gap *= slowness_obelisk_theorem
                 accumulator_b1 += gap
                 i += 1
 
@@ -189,7 +197,11 @@ class Algorithms :
             theoric_gap_21jet = json.loads(f.read())
             while i < len(ALL_STATIONS_21JET) :
                 gap_choice = theoric_gap_21jet[str(i)]
-                gap = gap_choice["max"] if Theorem.SEEKING_HEAD_CONSIDER_MAX in theorems else gap_choice["average"]
+                gap : float
+                if Theorem.SEEKING_HEAD_CONSIDER_MAX in theorems :
+                    gap = gap_choice["max"] 
+                else :
+                    gap = gap_choice["average"] + gap_choice["std"]
                 accumulator_21jet += gap
                 i += 1
 

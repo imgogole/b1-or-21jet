@@ -12,6 +12,7 @@ class Algorithm(Enum):
 
 class Theorem(Flag) :
     SEEKING_HEAD_CONSIDER_MAX = 1 # If this flag is enabled, the theoric gap will be the maximum, otherwise the average
+    OBELISK_THEOREM = 2
     @staticmethod
     def Names(values) :
         return [t.name for t in Theorem if t.value & values]
