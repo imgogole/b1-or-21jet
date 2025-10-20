@@ -30,12 +30,14 @@
 
 <body>
     <h1 id="title">
-    <span class="title-inline">Documentation - <a href="https://www.b1-or-21jet.fr">B1 ou 21JET</a></span>
-    <span class="title-break">Documentation<br><a href="https://www.b1-or-21jet.fr">B1 ou 21JET</a></span>
-</h1>
+        <span class="title-inline">Documentation - <a href="https://www.b1-or-21jet.fr">B1 ou 21JET</a></span>
+        <span class="title-break">Documentation<br><a href="https://www.b1-or-21jet.fr">B1 ou 21JET</a></span>
+    </h1>
     <div class="container">
         <div class="doc">
-            <p>Cette page fournit la documentation complète du site <b>B1 ou 21JET</b>, pour comprendre son fonctionnement, les différentes méthodes utilisées, ainsi qu'une méthodologie pour déterminer les paramètres qui vous conviennent.</p>
+            <p>Cette page fournit la documentation complète du site <b>B1 ou 21JET</b>, pour comprendre son
+                fonctionnement, les différentes méthodes utilisées, ainsi qu'une méthodologie pour déterminer les
+                paramètres qui vous conviennent.</p>
             <br>
             <span class="doc_info"><span style="color:#fa4d4d;">Attention : </span>Ce site ne donne qu'une estimation
                 précise du meilleur bus à prendre, il n'y a personne devant l'arrêt qui guette les horaires et qui fait
@@ -50,40 +52,63 @@
             <h2>Utilisation</h2>
             <br>
             <b>B1 ou 21JET</b> détermine à la station <b>Métro Rond Point du Prado</b> quel bus prendre entre le
-            <b>B1</b> et le <b>21JET</b> pour arriver le plus rapidement possible à la station <b>Luminy Parc National des
+            <b>B1</b> et le <b>21JET</b> pour arriver le plus rapidement possible à la station <b>Luminy Parc National
+                des
                 Calanques</b>.
             <br>
-            Lorsque vous arrivez sur le site, selon les paramètres sélectionnés, le logo du <b>B1</b> s'affichera s'il faut prendre le B1, et le logo du <b>21JET</b> s'affichera s'il faut prendre le 21JET.
+            Lorsque vous arrivez sur le site, selon les paramètres sélectionnés, le logo du <b>B1</b> s'affichera s'il
+            faut prendre le B1, et le logo du <b>21JET</b> s'affichera s'il faut prendre le 21JET.
             <br><br>
-            Les données se mettent à jour toutes les <b>60 secondes</b>. Vous pouvez rafraîchir la page pour obtenir les derniers résultats calculés. Il se peut que ces résultats ne soient pas encore disponibles immédiatement, comptez un léger délai selon la puissance de nos supers ordinateurs.
+            Les données se mettent à jour toutes les <b>60 secondes</b>. Vous pouvez rafraîchir la page pour obtenir les
+            derniers résultats calculés. Il se peut que ces résultats ne soient pas encore disponibles immédiatement,
+            comptez un léger délai selon la puissance de nos supers ordinateurs.
             <br><br>
             Les paramètres que vous pouvez configurer sont :<br>
             - Les <b>algorithmes</b> : Vous pouvez choisir la méthode utilisée pour calculer le bus le plus rapide.<br>
             - Les <b>théorèmes</b> : Vous pouvez choisir aucun, un ou plusieurs théorèmes pour chaque algorithme. Ils
             vous permettent d'impacter les calculs en ajoutant des aléas et des contrôles.
             <br><br>
-                        <h2>Algorithmes</h2>
+            <h2>Algorithmes</h2>
             <br>
             <h3>Seven minutes rule</h3>
             <br>
-            <p>L'algorithme de <b>la règle des 7 minutes</b> précise que si le prochain <b>21JET</b> arrive au plus 7 minutes après le prochain <b>B1</b>, alors il faut prendre le <b>21JET</b>.</p>
+            <p>L'algorithme de <b>la règle des 7 minutes</b> précise que si le prochain <b>21JET</b> arrive au plus 7
+                minutes après le prochain <b>B1</b>, alors il faut prendre le <b>21JET</b>.</p>
             <br>
-            <p>Cette simple règle est un moyen efficace d'estimer grossièrement mais rapidement le meilleur bus à prendre. Nous vous conseillons de l'utiliser si vous n'avez vraiment pas le temps d'attendre car le B1 est juste devant vous, sinon, utilisez un meilleur algorithme plus performant.</p>
+            <p>Cette simple règle est un moyen efficace d'estimer grossièrement mais rapidement le meilleur bus à
+                prendre. Nous vous conseillons de l'utiliser si vous n'avez vraiment pas le temps d'attendre car le B1
+                est juste devant vous, sinon, utilisez un meilleur algorithme plus performant.</p>
             <br>
             <h3>Seeking head</h3>
             <br>
-            <p>L'algorithme de la <b>Tête chercheuse</b> consiste à accumuler les écarts des temps réels de trajet entre chaque
+            <p>L'algorithme de la <b>Tête chercheuse</b> consiste à accumuler les écarts des temps réels de trajet entre
+                chaque
                 station.
-                En théorie, on obtient une estimation proche du temps réel entre Métro Rond Point du Prado et Luminy. Cependant, l'API de la RTM limite la vue des derniers bus traquables à 2. Cela veut dire que traquer un bus devient impossible si le prochain bus à prendre à Métro Rond Point du Prado n'est pas au plus l'avant-dernier bus qui arrivera à Luminy.</p>
+                En théorie, on obtient une estimation proche du temps réel entre Métro Rond Point du Prado et Luminy.
+                Cependant, l'API de la RTM limite la vue des derniers bus traquables à 2. Cela veut dire que traquer un
+                bus devient impossible si le prochain bus à prendre à Métro Rond Point du Prado n'est pas au plus
+                l'avant-dernier bus qui arrivera à Luminy.</p>
             <br>
-            <p>Par conséquent, nous allons traquer le bus jusqu'à qu'il ne soit plus traquable à une station \( S_{n} \). À
+            <p>Par conséquent, nous allons traquer le bus jusqu'à qu'il ne soit plus traquable à une station \( S_{n}
+                \). À
                 partir de cette station, nous allons utiliser les valeurs théoriques. Ces valeurs théoriques seront des
-                moyennes des écarts théoriques à tout temps, car on considère que l'heure qu'il est n'influence pas ces valeurs et
+                moyennes des écarts théoriques à tout temps, car on considère que l'heure qu'il est n'influence pas ces
+                valeurs et
                 qu'elles resteront, dans le meilleur des cas, constantes.</p>
             <br>
             <p>Pour cet algorithme, vous pouvez choisir parmi deux <b>théorèmes :</b></p><br>
-            - <b>Écart maximum</b> : <span style="color:rgb(255, 113, 113)">Désactivé : </span> La moyenne des écarts des temps théoriques est utilisée, et l'écart-type est également ajouté pour prendre en compte les fructuations. <span style="color:rgb(157, 255, 156)">Activé : </span> Les valeurs maximums sont directement utilisées.<br>
-            - <b>Théorème d'Obélisque</b> : Entre la station Métro Rond Point du Prado et Obélisque, on théorise un ralentissement important entre chacune de ces stations dû à une importante population agée qui veulent descendre à la station Obélisque. Le taux de ce ralentissement est théorisé à <b>25%</b>, mais cette valeur peut-être changée dans les jours à venir, voire même être dépendante de l'heure.
+            - <b>Écart maximum</b> : <span style="color:rgb(255, 113, 113)">Désactivé : </span> La moyenne des écarts
+            des temps théoriques est utilisée, et l'écart-type est également ajouté pour prendre en compte les
+            fructuations. <span style="color:rgb(157, 255, 156)">Activé : </span> Les valeurs maximums sont directement
+            utilisées.<br>
+            - <b>Théorème d'Obélisque</b> : Entre la station Métro Rond Point du Prado et Obélisque, on théorise un
+            ralentissement important entre chacune de ces stations dû à une importante population agée qui veulent
+            descendre à la station Obélisque. Le taux de ce ralentissement est théorisé à <b>25%</b>, mais cette valeur
+            peut-être changée dans les jours à venir, voire même être dépendante de l'heure.
+
+            <img id="imgarltr" src="images/AllRoadsLeadToRome.jpeg"
+                alt="All roads lead to Luminy Parc National des Calanques">
+            <span class="img_description">All roads lead to Luminy Parc National des Calanques</span>
         </div>
 
         <div class="error" id="error-message"></div>

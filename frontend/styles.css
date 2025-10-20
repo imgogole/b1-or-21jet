@@ -59,13 +59,22 @@ h1 .title-break {
     overflow: visible;
 }
 
-#img21jet
-{
+#img21jet {
     width: 100%;
     height: auto;
     max-height: 70vh;
     object-fit: contain;
 }
+
+#imgarltr {
+    width: 40%;
+    height: auto;
+    max-height: 70vh;
+    object-fit: contain;
+    display: block;
+    margin: 30px auto 0 auto;
+}
+
 
 .img_description {
     font-style: italic;
@@ -85,8 +94,7 @@ h1 .title-break {
     overflow: visible;
 }
 
-.doc_info
-{
+.doc_info {
     color: #b5b5b5;
     font-size: 75%;
 }
