@@ -7,6 +7,7 @@ const flagsContainer = document.getElementById('flags-dropdown-custom');
 const longTimeLoading = document.getElementById('long-time-loading');
 
 let selectedFlags = 0;
+let currentFetchController = null;
 
 function setFavicon(imgSrc) {
     let link = document.querySelector("link[rel~='icon']");
@@ -28,7 +29,6 @@ function updateFlagsVisibility() {
         if (related !== selected) div.classList.remove('selected');
     });
 }
-
 
 flagsContainer.addEventListener('click', (e) => {
     if (!e.target.classList.contains('option')) return;
@@ -52,6 +52,10 @@ flagsContainer.addEventListener('click', (e) => {
 });
 
 const fetchData = () => {
+    if (currentFetchController) currentFetchController.abort();
+    currentFetchController = new AbortController();
+    const signal = currentFetchController.signal;
+
     updateFlagsVisibility();
     setFavicon('images/logo.png');
 
@@ -64,7 +68,9 @@ const fetchData = () => {
     const enumValue = parseInt(enumDropdown.value);
     const flags = selectedFlags;
 
-    const url = window.location.hostname.includes("localhost") ? `http://localhost:5000/api/${enumValue}/${flags}` : `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
+    const url = window.location.hostname.includes("localhost") ?
+        `http://localhost:5000/api/${enumValue}/${flags}` :
+        `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
 
     let longLoadingTimer = setTimeout(() => {
         longTimeLoading.style.display = 'block';
@@ -75,20 +81,18 @@ const fetchData = () => {
         headers: new Headers({
             "ngrok-skip-browser-warning": "69420",
         }),
+        signal
     })
         .then(response => {
             clearTimeout(longLoadingTimer);
             longTimeLoading.style.display = 'none';
-            console.log(response);
             if (!response.ok) throw new Error('Erreur réseau');
             return response.json();
         })
         .then(data => {
-
             loading.style.display = 'none';
-            if (data.status !== 'success') {
-                throw new Error('Erreur dans la réponse');
-            }
+            if (data.status !== 'success') throw new Error('Erreur dans la réponse');
+
             if (data['21jet_prob'] === 0 && data['b1_prob'] === 0) {
                 imageContainer.textContent = "Pas de bus disponible";
                 setFavicon('images/logo.png');
@@ -112,6 +116,8 @@ const fetchData = () => {
             longTimeLoading.style.display = 'none';
             loading.style.display = 'none';
             imageContainer.textContent = '';
+
+            if (err.name === 'AbortError') return;
             errorMessage.textContent = `Erreur: ${err.message}`;
         });
 };
@@ -126,11 +132,8 @@ window.addEventListener('load', () => {
         const options = flagsContainer.getElementsByClassName('option');
         Array.from(options).forEach(div => {
             const flagValue = parseInt(div.dataset.value);
-            if ((flags & flagValue) !== 0) {
-                div.classList.add('selected');
-            } else {
-                div.classList.remove('selected');
-            }
+            if ((flags & flagValue) !== 0) div.classList.add('selected');
+            else div.classList.remove('selected');
         });
     }
 
