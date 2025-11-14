@@ -24,6 +24,12 @@ def on_home_page() :
 
 @app.route("/api/<int:algorithm>/<int:theorems>", methods=["GET"])
 def on_request(algorithm :int, theorems: int) :
+
+    # Check if the algorithm exists
+    if not Algorithm.Name(algorithm) :
+        logging.info(f"Request algo : {Algorithm.Name(algorithm)}, theorems : {Theorem.Names(theorems)}. Algorithm does not exist")
+        return Result.InvalidAlgorithm()
+
     must_update = Searcher.CheckForUpdate(algorithm, theorems)
     if must_update :
         Searcher.Update(algorithm, theorems)

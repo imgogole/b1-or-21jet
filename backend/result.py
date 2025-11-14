@@ -8,6 +8,13 @@ class Result :
             "status" : "not_generated_yet",
         }
         return jsonify(result), 200
+    @staticmethod
+    def InvalidAlgorithm() :
+        result = {
+            "status" : "invalid_algorithm",
+            "message" : "The specified algorithm does not exist."
+        }
+        return jsonify(result), 400
     def __init__(self, _b1_prob, _21jet_prob, at_time) :
         self.__b1_prob = _b1_prob           # Probability to take B1 at this time
         self.__21jet_prob = _21jet_prob     # Probability to take 21Jet at this time
