@@ -108,6 +108,12 @@ h1 .title-break {
     margin-bottom: 10px;
 }
 
+#long-time-loading-message {
+    color: #ff7171 !important;
+    font-size: 75% !important;
+    display: none;
+}
+
 img {
     width: 200px;
     height: 200px;
@@ -182,9 +188,10 @@ a {
     text-decoration: none;
 }
 
-#last-update {
+#data-info {
     margin-top: 10px;
     margin-bottom: 15px;
+    gap: 10px;
 }
 
 #flags-dropdown-custom {
@@ -252,4 +259,19 @@ a {
 .option.selected {
     font-weight: bold;
     color: #c8ffb9;
+}
+
+.wifi-icon path {
+  opacity: 0.3;
+  transform-origin: center;
+  animation: wifi-blink 1.5s infinite;
+}
+
+.wifi-icon .arc1 { animation-delay: 0s; }
+.wifi-icon .arc2 { animation-delay: 0.2s; }
+.wifi-icon .arc3 { animation-delay: 0.4s; }
+
+@keyframes wifi-blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
 }

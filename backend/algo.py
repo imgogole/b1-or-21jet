@@ -13,6 +13,27 @@ ALL_STATIONS_21JET  : list
 
 SEEKING_HEAD_TIME_BETWEEN_REQUESTS = 0.05
 
+def NextBusTime(b1_prob: float, jet21_prob: float) -> float:
+    if b1_prob == jet21_prob == 0:
+        return -1
+
+    if b1_prob > jet21_prob:
+        hms = REALTIME_B1.Get("temps_reel/0/DepartureTime/Hour")
+    else:
+        hms = REALTIME_21JET.Get("temps_reel/0/DepartureTime/Hour")
+
+    if hms is None:
+        return -1
+
+    dt = ToDateTime(hms)
+    now = Now()
+    delta = (dt - now).total_seconds()
+
+    if delta < 0:
+        return -1
+
+    return delta
+
 def ToDateTime(hms: str) -> datetime:
     fmt = "%H:%M:%S"
     t = datetime.strptime(hms, fmt).time()
@@ -53,9 +74,16 @@ class Algorithms :
         # Ignores if the last 21Jet passed
         if datetime.now().time() > HOUR_LAST_21JET :
            print("The 21Jet bus can't pass for now, take B1")
-           return 1, 0
-
+           return 1, 0, NextBusTime(1, 0)
+        
         theorems = Theorem.Names(theos)
+        b1_prob, jet21_prob = Algorithms.GetResultFromAlgo(algo, theorems)
+        next_bus_time = NextBusTime(b1_prob, jet21_prob)
+
+        return b1_prob, jet21_prob, next_bus_time
+
+        
+    def GetResultFromAlgo(algo: int, theorems: list[str]) :
         if (algo == 0) :
             return Algorithms.SevenMinutesRule()
         elif (algo == 1) :

@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from markupsafe import escape
 from searcher import *
+import time
 import logging
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ CORS(app, resources={r"/api/*": {"origins": [
     "https://www.b1-or-21jet.fr",
     "https://b1-or-21jet-frontend.onrender.com",
     "http://localhost:5000",
-    "http://localhost:3000"
+    "http://localhost:8000"
 ]}})
 
 Algorithms.InitConstants()
@@ -24,7 +25,6 @@ def on_home_page() :
 
 @app.route("/api/<int:algorithm>/<int:theorems>", methods=["GET"])
 def on_request(algorithm :int, theorems: int) :
-
     # Check if the algorithm exists
     if not Algorithm.Name(algorithm) :
         logging.info(f"Request algo : {Algorithm.Name(algorithm)}, theorems : {Theorem.Names(theorems)}. Algorithm does not exist")
