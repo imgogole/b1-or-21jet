@@ -7,29 +7,18 @@ const nextBus = document.getElementById('next-bus');
 const errorMessage = document.getElementById('error-message');
 const flagsContainer = document.getElementById('flags-dropdown-custom');
 const longTimeLoading = document.getElementById('long-time-loading');
-const wifi_icon_html = `<span class="wifi-icon" style="display:inline-block;vertical-align:-2px;width:1em;height:0.85em;margin-left: 5px;">
-  <svg viewBox="0 0 16 17" width="100%" height="100%">
-    
-    <path class="arc3" d="M 1 2 A 14 14 0 0 1 15 16.5" 
-          fill="none" 
-          stroke="#ffffff" 
-          stroke-width="1.7" 
-          stroke-linecap="round"/>
+const wifi_icon_size = "0.8em";
+const wifi_icon_y = "10px";
 
-    <path class="arc2" d="M 1 7 A 9 9 0 0 1 10 16.5" 
-          fill="none" 
-          stroke="#ffffff" 
-          stroke-width="1.7" 
-          stroke-linecap="round"/>
-
-    <path class="arc1" d="M 1 12 A 4 4 0 0 1 5 16.5" 
-          fill="none" 
-          stroke="#ffffff" 
-          stroke-width="1.7" 
-          stroke-linecap="round"/>
-          
+const wifi_icon_html = `
+<span class="wifi-icon" style="display:inline-block;vertical-align:${wifi_icon_y};width:${wifi_icon_size};height:${wifi_icon_size};margin-left:-5px;">
+  <svg viewBox="0 0 17 18" width="100%" height="100%">
+    <path class="arc3" d="M1 2 A14 14 0 0 1 15 16.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+    <path class="arc2" d="M1 7 A9 9 0 0 1 10 16.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+    <path class="arc1" d="M1 12 A4 4 0 0 1 5 16.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
   </svg>
 </span>`;
+
 
 
 let selectedFlags = 0;
@@ -95,7 +84,9 @@ const fetchData = () => {
     const enumValue = parseInt(enumDropdown.value);
     const flags = selectedFlags;
 
-    const url = window.location.hostname.includes("localhost") ?
+    const test = window.location.hostname.includes("localhost");
+
+    const url = test ?
         `http://localhost:5000/api/${enumValue}/${flags}` :
         `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
 
@@ -120,7 +111,9 @@ const fetchData = () => {
             loading.style.display = 'none';
             if (data.status !== 'success') throw new Error('Erreur dans la réponse');
 
-            dataInfo.style.display = 'block';
+            dataInfo.style.display = 'flex';
+
+            let bus_to_take = "none";
 
             if (data['21jet_prob'] === 0 && data['b1_prob'] === 0) {
                 imageContainer.textContent = "Pas de bus disponible";
@@ -130,19 +123,26 @@ const fetchData = () => {
                 img.src = 'images/21jet_logo.svg';
                 setFavicon('images/21jet_logo.svg');
                 imageContainer.appendChild(img);
+
+                bus_to_take = "21jet";
             } else {
                 const img = document.createElement('img');
                 img.src = 'images/b1_logo.svg';
                 setFavicon('images/b1_logo.svg');
                 imageContainer.appendChild(img);
+
+                bus_to_take = "b1";
             }
 
-            if (data['next_bus_time'] !== undefined && data['next_bus_time'] !== -1)
+            if ((data['next_bus_time'] !== undefined && data['next_bus_time'] !== -1))
             {
                 nextBus.style.display = 'block';
 
                 let minutes = Math.ceil(parseFloat(data['next_bus_time']) / 60);
-                nextBus.innerHTML = `Prochain bus : <b>${minutes}</b>` + wifi_icon_html;
+                let bus_text = bus_to_take === "none" ? "bus" : bus_to_take === "b1" ? `<span style="color:rgba(229, 0, 107)">B1</span>` : `<span style="color:rgba(240, 127, 60)">21Jet</span>`;
+                let msg_minutes = minutes == 0 ? "En vue" : minutes;
+
+                nextBus.innerHTML = `Prochain ${bus_text} : <b>${msg_minutes}</b>` + wifi_icon_html;
             }
 
             const date = new Date(data.time * 1000);

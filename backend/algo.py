@@ -13,15 +13,19 @@ ALL_STATIONS_21JET  : list
 
 SEEKING_HEAD_TIME_BETWEEN_REQUESTS = 0.05
 
-def NextBusTime(b1_prob: float, jet21_prob: float) -> float:
-    if b1_prob == jet21_prob == 0:
+THRESHOLD_NEXT_BUS_TIME = 30
+
+def NextBusTime(b1_prob: float, jet21_prob: float, bus_to_watch: int = 0, threshold: float = THRESHOLD_NEXT_BUS_TIME) -> float:
+    # ignores if we cannot track any bus
+    if bus_to_watch >= 2 or (b1_prob == jet21_prob == 0):
         return -1
 
     if b1_prob > jet21_prob:
-        hms = REALTIME_B1.Get("temps_reel/0/DepartureTime/Hour")
+        hms = REALTIME_B1.Get(f"temps_reel/{bus_to_watch}/DepartureTime/Hour")
     else:
-        hms = REALTIME_21JET.Get("temps_reel/0/DepartureTime/Hour")
+        hms = REALTIME_21JET.Get(f"temps_reel/{bus_to_watch}/DepartureTime/Hour")
 
+    # rtm api gives no info about this bus
     if hms is None:
         return -1
 
@@ -29,10 +33,13 @@ def NextBusTime(b1_prob: float, jet21_prob: float) -> float:
     now = Now()
     delta = (dt - now).total_seconds()
 
-    if delta < 0:
-        return -1
+    if delta > 0:
+        return delta # the time is in the future
+    elif -threshold < delta <= 0:
+        return 0 # we accept a small negative delta as "the bus is arriving now"
+    else:
+        return NextBusTime(b1_prob, jet21_prob, bus_to_watch + 1, threshold) # the bus has already passed, try the next one
 
-    return delta
 
 def ToDateTime(hms: str) -> datetime:
     fmt = "%H:%M:%S"

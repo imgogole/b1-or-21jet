@@ -191,7 +191,8 @@ a {
 #data-info {
     margin-top: 10px;
     margin-bottom: 15px;
-    gap: 10px;
+    flex-direction: column;
+    gap: 5px;
 }
 
 #flags-dropdown-custom {
