@@ -109,7 +109,7 @@ const fetchData = () => {
         })
         .then(data => {
             loading.style.display = 'none';
-            if (data.status !== 'success') throw new Error('Erreur dans la réponse');
+            if (data.status !== 'success') throw new Error(data.message || 'Erreur inconnue');
 
             dataInfo.style.display = 'flex';
 

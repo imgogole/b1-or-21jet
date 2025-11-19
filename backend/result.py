@@ -5,13 +5,16 @@ class Result :
     @staticmethod
     def NoResult() :
         result = {
-            "status" : "not_generated_yet",
+            "status" : "failure",
+            "code" : "not_generated_yet",
+            "message" : "The result is not generated yet. Please try again later."
         }
         return jsonify(result), 200
     @staticmethod
     def InvalidAlgorithm() :
         result = {
-            "status" : "invalid_algorithm",
+            "status" : "failure",
+            "code" : "invalid_algorithm",
             "message" : "The specified algorithm does not exist."
         }
         return jsonify(result), 400
