@@ -150,9 +150,9 @@ const fetchData = () => {
         })
         .catch(err => {
             clearTimeout(longLoadingTimer);
-            longTimeLoading.style.display = 'none';
             loading.style.display = 'none';
             imageContainer.textContent = '';
+            longTimeLoading.style.display = 'none';
 
             if (err.name === 'AbortError') return;
             errorMessage.textContent = `Erreur: ${err.message}`;

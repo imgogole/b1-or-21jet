@@ -108,10 +108,17 @@ h1 .title-break {
     margin-bottom: 10px;
 }
 
+
 #long-time-loading-message {
-    color: #ff7171 !important;
+    color: #e7d37f !important;
     font-size: 75% !important;
-    display: none;
+    animation: softPulse 2s ease-in-out infinite;
+}
+
+@keyframes softPulse {
+    0% { opacity: 0.65; }
+    50% { opacity: 1; }
+    100% { opacity: 0.65; }
 }
 
 img {

@@ -47,7 +47,8 @@ def ToDateTime(hms: str) -> datetime:
     return datetime.combine(date(1970, 1, 2), t)
 
 def Now() -> datetime:
-    n = datetime.now()
+    tz = timezone(timedelta(hours=1))
+    n = datetime.now(tz)
     return datetime(1970, 1, 2, n.hour, n.minute, n.second, n.microsecond)
 
 def ToSeconds(hms: str) -> float :

@@ -1,6 +1,6 @@
 import requests
 import time as tme
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timezone, timedelta
 
 API_URL                 = "https://api.rtm.fr/front/"
 PNT_ROND_POINT_DU_PRADO = "RTM:PNT:00001747"
