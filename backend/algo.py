@@ -196,7 +196,7 @@ class Algorithms :
                     gap = gap_choice["max"] 
                 else :
                     gap = gap_choice["average"] + gap_choice["std"]
-                if i <= 8 :
+                if Theorem.OBELISK_THEOREM in theorems and i <= 8 :
                     gap *= slowness_obelisk_theorem
                 accumulator_b1 += gap
                 i += 1
