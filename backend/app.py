@@ -5,6 +5,7 @@ from searcher import *
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import logging
+import os
 
 app = Flask(__name__)
 
@@ -68,4 +69,5 @@ def ratelimit_handler(e):
     return Result.RateLimitExceeded(e.description)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    production = os.environ.get("RENDER") is not None or os.environ.get("FLASK_ENV") == "production"
+    app.run(host="0.0.0.0", port=5000, debug=not production)
