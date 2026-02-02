@@ -18,6 +18,14 @@ class Result :
             "message" : "The specified algorithm does not exist."
         }
         return jsonify(result), 400
+    @staticmethod
+    def RateLimitExceeded(description) :
+        result = {
+            "status": "failure",
+            "code": "rate_limit_exceeded",
+            "message": f"Too many requests ! {description}"
+        }
+        return jsonify(result), 429
     def __init__(self, _b1_prob, _21jet_prob, at_time) :
         self.__b1_prob = _b1_prob               # Probability to take B1 at this time
         self.__21jet_prob = _21jet_prob         # Probability to take 21Jet at this time
