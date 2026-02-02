@@ -107,7 +107,7 @@ const fetchBusTimes = (bus_to_take = "none") => {
             jet_html = `<span style="color:rgba(240, 127, 60)">21Jet</span> : Indispo`;
         }
         
-        if (bus_to_take == "b1") nextBus.innerHTML = `<div>${jet_html}</div><div>${b1_html}</div>`; 
+        if (bus_to_take == "21jet") nextBus.innerHTML = `<div>${jet_html}</div><div>${b1_html}</div>`; 
         else nextBus.innerHTML = `<div>${b1_html}</div><div>${jet_html}</div>`;
     })
     .catch(err => {
