@@ -40,6 +40,25 @@ def NextBusTime(b1_prob: float, jet21_prob: float, bus_to_watch: int = 0, thresh
     else:
         return NextBusTime(b1_prob, jet21_prob, bus_to_watch + 1, threshold) # the bus has already passed, try the next one
 
+def CalculateDelta(data_obj: Data, bus_index: int = 0, threshold: float = THRESHOLD_NEXT_BUS_TIME) -> float:
+    if bus_index >= 2:
+        return -1
+    
+    hms = data_obj.Get(f"temps_reel/{bus_index}/DepartureTime/Hour")
+    
+    if hms is None:
+        return -1
+
+    dt = ToDateTime(hms)
+    now = Now()
+    delta = (dt - now).total_seconds()
+
+    if delta > 0:
+        return delta
+    elif -threshold < delta <= 0:
+        return 0
+    else:
+        return CalculateDelta(data_obj, bus_index + 1, threshold)
 
 def ToDateTime(hms: str) -> datetime:
     fmt = "%H:%M:%S"
@@ -70,6 +89,23 @@ class Algorithms :
                 ALL_STATIONS_B1.append(Data(DatasAPI.RealtimeLinePointUrl(LINE_B1, pnt_ref, DIR_RPDP_TO_LUMINY_B1)))
                 if which_one == "2" :
                     ALL_STATIONS_21JET.append(Data(DatasAPI.RealtimeLinePointUrl(LINE_21JET, pnt_ref, DIR_RPDP_TO_LUMINY_B1)))
+    
+    @staticmethod
+    def GetNextBuses() :
+        """
+        Force update and return deltas for both buses
+        """
+        REALTIME_B1.Update()
+        REALTIME_21JET.Update()
+
+        # Check for 21Jet service hours
+        jet_time = -1
+        if datetime.now().time() <= HOUR_LAST_21JET :
+            jet_time = CalculateDelta(REALTIME_21JET)
+        
+        b1_time = CalculateDelta(REALTIME_B1)
+
+        return b1_time, jet_time
 
     @staticmethod
     def Start(algo: int, theos: int = 0) :
@@ -82,13 +118,12 @@ class Algorithms :
         # Ignores if the last 21Jet passed
         if datetime.now().time() > HOUR_LAST_21JET :
            print("The 21Jet bus can't pass for now, take B1")
-           return 1, 0, NextBusTime(1, 0)
+           return 1, 0
         
         theorems = Theorem.Names(theos)
         b1_prob, jet21_prob = Algorithms.GetResultFromAlgo(algo, theorems)
-        next_bus_time = NextBusTime(b1_prob, jet21_prob)
-
-        return b1_prob, jet21_prob, next_bus_time
+        
+        return b1_prob, jet21_prob
 
         
     def GetResultFromAlgo(algo: int, theorems: list[str]) :

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from markupsafe import escape
 from searcher import *
@@ -23,6 +23,14 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logg
 def on_home_page() :
     return escape("MIPS MIPS, c'est moi le MIPS"), 200
 
+@app.route("/api/next_buses", methods=["GET"])
+def next_buses() :
+    b1_delta, jet_delta = Algorithms.GetNextBuses()
+    return jsonify({
+        "b1": b1_delta,
+        "21jet": jet_delta
+    }), 200
+
 @app.route("/api/<int:algorithm>/<int:theorems>", methods=["GET"])
 def on_request(algorithm :int, theorems: int) :
     # Check if the algorithm exists
@@ -46,4 +54,3 @@ def on_request(algorithm :int, theorems: int) :
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-

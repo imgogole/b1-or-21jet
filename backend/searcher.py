@@ -4,7 +4,7 @@ from algo import *
 import time
 
 def KeyName(algo: int, theos: int) -> str :
-    return str(algo) + "." + str(theos)
+    return str(algo) + ":" + str(theos)
 
 class Searcher :
     __work_interval = 60
@@ -49,6 +49,6 @@ class Searcher :
     @staticmethod
     def Update(algo: int, theos: int) :
         key = KeyName(algo, theos)
-        prob_b1, prob_21jet, next_bus_time = Algorithms.Start(algo, theos)
-        result = Result(prob_b1, prob_21jet, time.time(), next_bus_time)
+        prob_b1, prob_21jet = Algorithms.Start(algo, theos)
+        result = Result(prob_b1, prob_21jet, time.time())
         Searcher.StoreCache(key, result)

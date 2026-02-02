@@ -19,10 +19,9 @@ const wifi_icon_html = `
   </svg>
 </span>`;
 
-
-
 let selectedFlags = 0;
 let currentFetchController = null;
+let decisionInterval = null;
 
 function setFavicon(imgSrc) {
     let link = document.querySelector("link[rel~='icon']");
@@ -45,6 +44,11 @@ function updateFlagsVisibility() {
     });
 }
 
+function resetDecisionTimer() {
+    if (decisionInterval) clearInterval(decisionInterval);
+    decisionInterval = setInterval(() => fetchData(true), 30000);
+}
+
 flagsContainer.addEventListener('click', (e) => {
     if (!e.target.classList.contains('option')) return;
 
@@ -64,22 +68,67 @@ flagsContainer.addEventListener('click', (e) => {
     }));
 
     fetchData();
+    resetDecisionTimer();
 });
 
-const fetchData = () => {
+const fetchBusTimes = () => {
+    const test = window.location.hostname.includes("localhost");
+    const url = test ?
+        `http://localhost:5000/api/next_buses` :
+        `https://b1-or-21jet-backend.onrender.com/api/next_buses`;
+
+    fetch(url, {
+        method: "get",
+        headers: new Headers({
+            "ngrok-skip-browser-warning": "69420",
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        nextBus.style.display = 'block';
+        
+        let b1_html = "";
+        let jet_html = "";
+        
+        if (data.b1 !== undefined && data.b1 !== -1) {
+            let minutes = Math.ceil(parseFloat(data.b1) / 60);
+            let msg_minutes = minutes == 0 ? "En vue" : minutes + " min";
+            b1_html = `Prochain <span style="color:rgba(229, 0, 107)">B1</span> : <b>${msg_minutes}</b>` + wifi_icon_html;
+        } else {
+             b1_html = `<span style="color:rgba(229, 0, 107)">B1</span> : Indispo`;
+        }
+
+        if (data['21jet'] !== undefined && data['21jet'] !== -1) {
+            let minutes = Math.ceil(parseFloat(data['21jet']) / 60);
+            let msg_minutes = minutes == 0 ? "En vue" : minutes + " min";
+            jet_html = `Prochain <span style="color:rgba(240, 127, 60)">21Jet</span> : <b>${msg_minutes}</b>` + wifi_icon_html;
+        } else {
+            jet_html = `<span style="color:rgba(240, 127, 60)">21Jet</span> : Indispo`;
+        }
+        
+        nextBus.innerHTML = `<div>${b1_html}</div><div>${jet_html}</div>`;
+    })
+    .catch(err => {
+        console.error("Failed to fetch next buses", err);
+    });
+}
+
+const fetchData = (isSilent = false) => {
     if (currentFetchController) currentFetchController.abort();
     currentFetchController = new AbortController();
     const signal = currentFetchController.signal;
 
     updateFlagsVisibility();
-    setFavicon('images/logo.png');
-
-    loading.style.display = 'block';
-    longTimeLoading.style.display = 'none';
-    dataInfo.style.display = 'none';
-    imageContainer.innerHTML = '';
-    imageContainer.appendChild(loading);
-    errorMessage.textContent = '';
+    
+    if (!isSilent) {
+        setFavicon('images/logo.png');
+        loading.style.display = 'block';
+        longTimeLoading.style.display = 'none';
+        dataInfo.style.display = 'none';
+        imageContainer.innerHTML = '';
+        imageContainer.appendChild(loading);
+        errorMessage.textContent = '';
+    }
 
     const enumValue = parseInt(enumDropdown.value);
     const flags = selectedFlags;
@@ -90,9 +139,14 @@ const fetchData = () => {
         `http://localhost:5000/api/${enumValue}/${flags}` :
         `https://b1-or-21jet-backend.onrender.com/api/${enumValue}/${flags}`;
 
-    let longLoadingTimer = setTimeout(() => {
-        longTimeLoading.style.display = 'block';
-    }, 10000);
+    let longLoadingTimer;
+    if (!isSilent) {
+        longLoadingTimer = setTimeout(() => {
+            longTimeLoading.style.display = 'block';
+        }, 10000);
+    }
+
+    fetchBusTimes();
 
     fetch(url, {
         method: "get",
@@ -102,7 +156,7 @@ const fetchData = () => {
         signal
     })
         .then(response => {
-            clearTimeout(longLoadingTimer);
+            if (!isSilent) clearTimeout(longLoadingTimer);
             longTimeLoading.style.display = 'none';
             if (!response.ok) throw new Error('Erreur réseau');
             return response.json();
@@ -112,8 +166,8 @@ const fetchData = () => {
             if (data.status !== 'success') throw new Error(data.message || 'Erreur inconnue');
 
             dataInfo.style.display = 'flex';
-
-            let bus_to_take = "none";
+            errorMessage.textContent = '';
+            imageContainer.innerHTML = '';
 
             if (data['21jet_prob'] === 0 && data['b1_prob'] === 0) {
                 imageContainer.textContent = "Pas de bus disponible";
@@ -123,32 +177,19 @@ const fetchData = () => {
                 img.src = 'images/21jet_logo.svg';
                 setFavicon('images/21jet_logo.svg');
                 imageContainer.appendChild(img);
-
-                bus_to_take = "21jet";
             } else {
                 const img = document.createElement('img');
                 img.src = 'images/b1_logo.svg';
                 setFavicon('images/b1_logo.svg');
                 imageContainer.appendChild(img);
-
-                bus_to_take = "b1";
-            }
-
-            if ((data['next_bus_time'] !== undefined && data['next_bus_time'] !== -1))
-            {
-                nextBus.style.display = 'block';
-
-                let minutes = Math.ceil(parseFloat(data['next_bus_time']) / 60);
-                let bus_text = bus_to_take === "none" ? "bus" : bus_to_take === "b1" ? `<span style="color:rgba(229, 0, 107)">B1</span>` : `<span style="color:rgba(240, 127, 60)">21Jet</span>`;
-                let msg_minutes = minutes == 0 ? "En vue" : minutes;
-
-                nextBus.innerHTML = `Prochain ${bus_text} : <b>${msg_minutes}</b>` + wifi_icon_html;
             }
 
             const date = new Date(data.time * 1000);
             lastUpdate.innerHTML = `Dernière mise à jour : <b>${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}</b>`;
         })
         .catch(err => {
+            if (isSilent) return;
+
             clearTimeout(longLoadingTimer);
             loading.style.display = 'none';
             imageContainer.textContent = '';
@@ -175,6 +216,7 @@ window.addEventListener('load', () => {
     }
 
     fetchData();
+    resetDecisionTimer();
 });
 
 enumDropdown.addEventListener('change', () => {
@@ -183,4 +225,5 @@ enumDropdown.addEventListener('change', () => {
         flags: selectedFlags
     }));
     fetchData();
+    resetDecisionTimer();
 });
