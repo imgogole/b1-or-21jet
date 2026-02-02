@@ -71,7 +71,8 @@ flagsContainer.addEventListener('click', (e) => {
     resetDecisionTimer();
 });
 
-const fetchBusTimes = () => {
+const fetchBusTimes = (bus_to_take = "none") => {
+
     const test = window.location.hostname.includes("localhost");
     const url = test ?
         `http://localhost:5000/api/next_buses` :
@@ -106,7 +107,8 @@ const fetchBusTimes = () => {
             jet_html = `<span style="color:rgba(240, 127, 60)">21Jet</span> : Indispo`;
         }
         
-        nextBus.innerHTML = `<div>${b1_html}</div><div>${jet_html}</div>`;
+        if (bus_to_take == "b1") nextBus.innerHTML = `<div>${jet_html}</div><div>${b1_html}</div>`; 
+        else nextBus.innerHTML = `<div>${b1_html}</div><div>${jet_html}</div>`;
     })
     .catch(err => {
         console.error("Failed to fetch next buses", err);
@@ -146,8 +148,6 @@ const fetchData = (isSilent = false) => {
         }, 10000);
     }
 
-    fetchBusTimes();
-
     fetch(url, {
         method: "get",
         headers: new Headers({
@@ -177,11 +177,13 @@ const fetchData = (isSilent = false) => {
                 img.src = 'images/21jet_logo.svg';
                 setFavicon('images/21jet_logo.svg');
                 imageContainer.appendChild(img);
+                fetchBusTimes("21jet");
             } else {
                 const img = document.createElement('img');
                 img.src = 'images/b1_logo.svg';
                 setFavicon('images/b1_logo.svg');
                 imageContainer.appendChild(img);
+                fetchBusTimes("b1");
             }
 
             const date = new Date(data.time * 1000);
